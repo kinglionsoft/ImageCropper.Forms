@@ -37,13 +37,17 @@ namespace Stormlion.ImageCropper
 
         public string CancelButtonTitle { get; set; } = "Cancel";
 
+        public StoreCameraMediaOptions StoreCameraMediaOptions { get; set; } = new StoreCameraMediaOptions();
+
+        public PickMediaOptions PickMediaOptions { get; set; } = new PickMediaOptions();
+
         public Action<string> Success { get; set; }
 
         public Action Faiure { get; set; }
 
         public async void Show(Page page, string imageFile = null)
         {
-            if(imageFile == null)
+            if (imageFile == null)
             {
                 await CrossMedia.Current.Initialize();
 
@@ -59,18 +63,18 @@ namespace Stormlion.ImageCropper
                         return;
                     }
 
-                     file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions());
+                    file = await CrossMedia.Current.TakePhotoAsync(StoreCameraMediaOptions);
                 }
-                else if(action == PhotoLibraryTitle)
+                else if (action == PhotoLibraryTitle)
                 {
-                    if(!CrossMedia.Current.IsPickPhotoSupported)
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
                     {
                         await page.DisplayAlert("Error", "This device is not supported to pick photo.", "OK");
                         Faiure?.Invoke();
                         return;
                     }
 
-                    file = await CrossMedia.Current.PickPhotoAsync();
+                    file = await CrossMedia.Current.PickPhotoAsync(PickMediaOptions);
                 }
                 else
                 {
